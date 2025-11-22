@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false)
-  const containerRef = useRef(null)
+  // Added <HTMLElement> type definition for better TypeScript support
+  const containerRef = useRef<HTMLElement | null>(null)
 
   // 1. Store mouse positions in refs (no re-renders for performance)
   const mousePos = useRef({ x: 0, y: 0 })
@@ -30,7 +31,8 @@ export default function HeroSection() {
     setMounted(true)
 
     // Handle Mouse Move
-    const handleMouseMove = (e) => {
+    // FIX: Added ': MouseEvent' type annotation here
+    const handleMouseMove = (e: MouseEvent) => {
       // Calculate position relative to center of screen
       const x = (e.clientX - window.innerWidth / 2)
       const y = (e.clientY - window.innerHeight / 2)
@@ -40,7 +42,7 @@ export default function HeroSection() {
     window.addEventListener('mousemove', handleMouseMove)
 
     // Animation Loop for "Slow" Movement
-    let animationFrameId
+    let animationFrameId: number
 
     const animate = () => {
       // LERP (Linear Interpolation): 
@@ -122,8 +124,9 @@ export default function HeroSection() {
               style={{
                 left: `${cube.x}%`,
                 top: `${cube.y}%`,
-                '--factor': cube.movementFactor, // Pass random factor to CSS
-              }}
+                // @ts-ignore - Custom CSS properties
+                '--factor': cube.movementFactor,
+              } as React.CSSProperties}
             >
               {/* Inner Container: Handles Float Animation */}
               <div
