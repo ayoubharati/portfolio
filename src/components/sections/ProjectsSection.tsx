@@ -168,7 +168,7 @@ export default function ProjectsSection() {
   };
 
   // Handle Image Errors
-  const handleImageError = (id: number) => {
+  const handleImageError = (id: string) => {
     setImgError(prev => ({ ...prev, [id]: true }));
   };
 
