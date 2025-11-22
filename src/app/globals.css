@@ -1,26 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
 @import "tailwindcss";
 
 :root {
-  --background: #1A1A1A;
-  --foreground: #E0E0E0;
-  --primary: #BB86FC;
-  --secondary: #03DAC6;
-  --card-background: #2C2C2C;
-  --border-color: #404040;
-  --text-light: #A0A0A0;
-  --text-dark: #FFFFFF;
-  --font-geist-sans: 'Inter', sans-serif;
-  --font-geist-mono: 'JetBrains Mono', monospace;
+  /* Wix Template Colors */
+  --background: #FFFFFF;
+  --foreground: #063F1F;
+  --primary: #E4EA6B;
+  --primary-dark: #063F1F;
+  --secondary: #3E6A32;
+  --card-background: #E1E1E1;
+  --border-color: #063F1F;
+  --text-light: #E1E1E1;
+  --text-dark: #063F1F;
+  --accent-lime: #E4EA6B;
+  --dark-green: #063F1F;
+  --medium-green: #3E6A32;
+  --light-gray: #E1E1E1;
+  
+  /* Fonts */
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-heading: 'Helvetica', 'Arial', sans-serif;
+  --font-accent: 'Playfair Display', serif;
 }
 
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
 }
@@ -35,15 +44,25 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--primary-dark);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+  background: var(--secondary);
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Wix-style typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+}
+
+.font-accent {
+  font-family: var(--font-accent);
 }
