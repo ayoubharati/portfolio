@@ -100,7 +100,7 @@ const projects = [
       "A full-stack web application for managing and automating exam supervision within universities. It streamlines scheduling, teacher assignments, and session monitoring with a secure interface and real-time updates.",
     techStack: ["React.js", "Spring Boot", "Spring Security", "Hibernate", "MySQL", "Tailwind CSS"],
     link: "https://github.com/YounesAO/ExamSessionManger",
-    thumbnail: "/assets/examsessionmanager_cover.png",
+    //thumbnail: "/assets/examsessionmanager_cover.png",
   },
   {
     id: 6,
@@ -216,7 +216,7 @@ export default function ProjectsSection() {
             <span className="font-accent text-[#FFD700]">My</span> Projects
           </h2>
           <p className="text-base !text-gray-300 font-body max-w-2xl mx-auto">
-            A collection of innovative projects showcasing my expertise in full-stack development.
+            A collection of innovative projects showcasing my expertise.
           </p>
         </div>
       </div>

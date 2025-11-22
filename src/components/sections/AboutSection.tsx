@@ -15,12 +15,13 @@ export default function AboutSection() {
             </h2>
 
             <p className="text-base leading-relaxed text-primary-dark mb-6 font-body">
-              At Ayoub Harati, I am dedicated to pushing boundaries and creating impactful solutions through cutting-edge technology. With a focus on innovation and excellence, I strive to empower businesses with transformative digital tools and services.
+              At Ayoub Harati, I’m dedicated to pushing boundaries and creating impactful solutions through cutting-edge technology. With a focus on innovation in <strong>Artificial Intelligence, Big Data, and Cloud Computing</strong>, I work to empower businesses with transformative digital tools and data-driven insights.
             </p>
 
             <p className="text-base leading-relaxed text-primary-dark mb-8 font-body">
-              I'm a 5th-year software engineering student at ENSA El Jadida, specializing in full-stack development, mobile applications, and business intelligence solutions. My foundation spans Java, Python, JavaScript, and SQL, with hands-on expertise in Spring Boot, React.js, and modern cloud technologies.
+              I’m a 5th-year engineering student at ENSA El Jadida, specializing in building scalable architectures and intelligent systems. My technical foundation includes <strong>Java, Python, and JavaScript</strong>, enabling me to engineer sophisticated solutions ranging from <strong>Generative AI models (LLMs, RAG)</strong> and <strong>Machine Learning</strong> to complex <strong>Data Warehousing and ETL pipelines</strong>.
             </p>
+
 
             <div className="flex flex-wrap gap-4">
               <button
