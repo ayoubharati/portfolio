@@ -4,14 +4,13 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false)
-  // Added <HTMLElement> type definition for better TypeScript support
   const containerRef = useRef<HTMLElement | null>(null)
 
-  // 1. Store mouse positions in refs (no re-renders for performance)
+  // 1. Store positions in refs
   const mousePos = useRef({ x: 0, y: 0 })
   const currentPos = useRef({ x: 0, y: 0 })
 
-  // 2. Generate cubes once on mount to avoid server/client mismatch
+  // 2. Generate cubes once
   const cubes = useMemo(() => {
     return Array.from({ length: 25 }).map((_, i) => ({
       id: i,
@@ -22,7 +21,6 @@ export default function HeroSection() {
       rotation: Math.random() * 360,
       delay: Math.random() * 5,
       duration: 5 + Math.random() * 5,
-      // Larger cubes move slightly more for a parallax depth effect
       movementFactor: 0.5 + Math.random() * 0.5
     }))
   }, [])
@@ -30,30 +28,41 @@ export default function HeroSection() {
   useEffect(() => {
     setMounted(true)
 
-    // Handle Mouse Move
-    // FIX: Added ': MouseEvent' type annotation here
+    // --- MOUSE HANDLER ---
     const handleMouseMove = (e: MouseEvent) => {
-      // Calculate position relative to center of screen
       const x = (e.clientX - window.innerWidth / 2)
       const y = (e.clientY - window.innerHeight / 2)
       mousePos.current = { x, y }
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
+    // --- GYROSCOPE HANDLER ---
+    const handleGyro = (e: DeviceOrientationEvent) => {
+      // Check if rotation data is available
+      if (e.gamma !== null && e.beta !== null) {
+        // Gamma: Left/Right tilt (-90 to 90) -> Map to X axis
+        // Beta: Front/Back tilt (-180 to 180) -> Map to Y axis
+        // We multiply by 15 to approximate pixel movement range
+        const x = e.gamma * 15
+        const y = (e.beta - 45) * 15 // Subtract 45 to account for holding phone at angle
 
-    // Animation Loop for "Slow" Movement
+        mousePos.current = { x, y }
+      }
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('deviceorientation', handleGyro)
+
+    // --- ANIMATION LOOP ---
     let animationFrameId: number
 
     const animate = () => {
-      // LERP (Linear Interpolation): 
-      // Move 5% of the distance towards the target per frame
-      // Changing 0.05 to 0.02 makes it slower, 0.1 makes it faster
+      // Slow smooth easing (LERP)
+      // Works for both Mouse and Gyro inputs automatically
       const ease = 0.05
 
       currentPos.current.x += (mousePos.current.x - currentPos.current.x) * ease
       currentPos.current.y += (mousePos.current.y - currentPos.current.y) * ease
 
-      // Update CSS Variables on the container
       if (containerRef.current) {
         containerRef.current.style.setProperty('--mouse-x', `${currentPos.current.x}px`)
         containerRef.current.style.setProperty('--mouse-y', `${currentPos.current.y}px`)
@@ -66,6 +75,7 @@ export default function HeroSection() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('deviceorientation', handleGyro)
       cancelAnimationFrame(animationFrameId)
     }
   }, [])
@@ -75,21 +85,32 @@ export default function HeroSection() {
   return (
     <>
       <style jsx global>{`
+        /* Default Scale (Desktop) */
+        :root {
+          --cube-scale: 1;
+        }
+
+        /* Mobile Scale: Make cubes 50% smaller on screens < 768px */
+        @media (max-width: 768px) {
+          :root {
+            --cube-scale: 0.5;
+          }
+        }
+
         @keyframes float {
           0%, 100% {
-            transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+            transform: translateY(0px) rotateX(0deg) rotateY(0deg) scale(var(--cube-scale));
           }
           50% {
-            transform: translateY(-20px) rotateX(15deg) rotateY(15deg);
+            transform: translateY(-20px) rotateX(15deg) rotateY(15deg) scale(var(--cube-scale));
           }
         }
         
         .cube-wrapper {
-          /* This wrapper handles the mouse follow movement */
           position: absolute;
           transform-style: preserve-3d;
           will-change: transform;
-          /* Using CSS vars updated by JS for performance */
+          /* The parallax movement (X/Y translation) happens here */
           transform: translate3d(
             calc(var(--mouse-x) * var(--factor) * 0.1), 
             calc(var(--mouse-y) * var(--factor) * 0.1), 
@@ -98,9 +119,10 @@ export default function HeroSection() {
         }
 
         .cube-container {
-          /* This inner container handles the float animation */
           transform-style: preserve-3d;
           perspective: 1000px;
+          /* We apply the scale variable here to resize without breaking logic */
+          /* NOTE: The scale is also included in the @keyframes float to ensure it persists during animation */
         }
         
         .cube-face {
@@ -117,23 +139,22 @@ export default function HeroSection() {
         {/* 3D Cubes Background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {cubes.map((cube) => (
-            // Outer Wrapper: Handles Positioning & Mouse Following
             <div
               key={cube.id}
               className="cube-wrapper"
               style={{
                 left: `${cube.x}%`,
                 top: `${cube.y}%`,
-                // @ts-ignore - Custom CSS properties
+                // @ts-ignore
                 '--factor': cube.movementFactor,
               } as React.CSSProperties}
             >
-              {/* Inner Container: Handles Float Animation */}
               <div
                 className="cube-container"
                 style={{
                   width: `${cube.size}px`,
                   height: `${cube.size}px`,
+                  /* Added scale var to keyframes in CSS above */
                   animation: `float ${cube.duration}s ease-in-out infinite`,
                   animationDelay: `${cube.delay}s`,
                 }}
